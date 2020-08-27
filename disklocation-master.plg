@@ -3,19 +3,15 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name             "disklocation">
 <!ENTITY author           "Ole-Henrik Jakobsen">
-<!ENTITY version          "2019.03.09">
-<!ENTITY launch           "Settings/&name;">
-<!ENTITY packageGIT       "https://github.com/olehj/disklocation.git">
+<!ENTITY version          "2020.03.18">
+<!ENTITY launch           "Tools/&name;">
 <!ENTITY branch           "master">
+<!ENTITY packageURL       "https://github.com/olehj/disklocation/archive/&branch;.zip">
 <!ENTITY pluginURL        "https://raw.githubusercontent.com/olehj/&name;/&branch;/&name;-&branch;.plg">
-<!ENTITY packagefile      "&name;.&version;.tar.bz2">
+<!ENTITY packagefile      "&name;.&version;.zip">
 <!ENTITY pluginLOC        "/boot/config/plugins/&name;">
 <!ENTITY emplugLOC        "/usr/local/emhttp/plugins">
 <!ENTITY emhttpLOC        "&emplugLOC;/&name;">
-<!ENTITY smartmontools    "smartmontools-7.0-x86_64-1.txz">
-<!ENTITY smartmontoolsMD5 "c5c852915332cd0984b040eeb545c43c">
-<!ENTITY gittools         "git-2.14.5-x86_64-1_slack14.2.txz">
-<!ENTITY gittoolsMD5      "99ab6ab1d4685a81252893db01d63c5a">
 <!ENTITY pluginsupportURL "https://forums.unraid.net/topic/77302-plugin-disk-location/">
 ]>
 
@@ -24,21 +20,162 @@
          version="&version;"
          launch="&launch;"
          pluginURL="&pluginURL;"
-	 min="6.6.0"
+	 icon="server"
+	 min="6.7.2"
 	 support="&pluginsupportURL;"
 >
 
-<FILE Name="/boot/packages/&smartmontools;" Run="upgradepkg --install-new" Max="6.6.9">
-<URL>https://mirrors.slackware.com/slackware/slackware64-current/slackware64/a/&smartmontools;</URL>
-<MD5>&smartmontoolsMD5;</MD5>
-</FILE>
+<!--
 
-<FILE Name="/boot/packages/&gittools;" Run="upgradepkg --install-new" Max="6.6.9">
-<URL>http://mirrors.slackware.com/slackware/slackware64-14.2/patches/packages/&gittools;</URL>
-<MD5>&gittoolsMD5;</MD5>
-</FILE>
+    Copyright 2019-2020, Ole-Henrik Jakobsen
 
+    This file is part of Disk Location for Unraid.
+
+    Disk Location for Unraid is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Disk Location for Unraid is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Disk Location for Unraid.  If not, see <https://www.gnu.org/licenses/>.
+
+-->
+	
 <CHANGES>
+###2020.03.30
+ - Commit #145 - BUG: Wrong checksum for disklocation.sh cronjob script.
+
+###2020.03.18
+ - FEATURE: Added license GNU GPL v3 for Disk Location.
+ 
+###2020.03.06
+ - Commit #142 - IMPROVEMENT: Differ between SATA SSD, NVMe, and rotational devices.
+ - Commit #141 - MINOR ISSUE: Checking for SSD only if rotation rate is not reported, some drives should show rotation rates again (ex. Toshiba drives).
+
+###2020.03.04
+ - Commit #139 - FEATURE: Added the ability to turn off scanning of device during a plugin update. If it's disabled it will rely on manual updates (Force Scan All) and S.M.A.R.T update schedules.
+ - Commit #138 - FEATURE: Added possibility to adjust the size of the preview/dashboard layout.
+
+###2020.03.03
+ - Commit #136 - IMPROVEMENT: Added help text for the "System" tab (also renamed the tab from "System Files").
+ - Commit #135 - FEATURE: Added an "Undelete" button under "System" tab for undeleting manually deleted devices.
+
+###2020.03.02
+ - Commit #133 - IMPROVEMENT: Removed the "Reset" buttons as they make people confused about its function. They only resetted the changed input in forms, pure html reset.
+
+###2020.02.28
+ - Commit #131 - BUG: A php comment section was accidentally pasted into an SQL creation variable, causing an update to fail (affected version: 2020.02.23).
+
+###2020.02.23
+ - Commit #127 - MAJOR ISSUE: Disk Location uses a cronjob for storing data in a database file located at the flash device, and an hourly cronjob might have exhausted some flash devices. A new setting is available where the default is now set as "Disabled", however, "Daily" (and longer periods) should still be quite safe to use. It's stored on the flash device because the database contain information about old devices as well, which is neat in case of a major device failure and you just wanna know how long it lasted.
+
+###2020.02.19
+ - Commit #124 - MINOR ISSUE/IMPROVEMENT: Added a "Reset All Color" button with following informative text to clarify the coloring of devices.
+
+###2020.01.27
+ - Commit #122 - IMPROVEMENT: "Force scan all" should check all drives in the database except manually deleted (hidden) ones. Earlier scanned just assigned devices, leaving some removed devices in the assignment list instead of "not found" list.
+ - Commit #121 - IMPROVEMENT: Better use of FontAwesome, PNG icon files removed.
+
+###2019.12.30
+ - Happy new year!
+ - Commit #119 - MINOR ISSUE/BUG: Fixed dropdown list in "Tray Allocations" to show all custom colors. Only "Empty color" can be now chosen for resetting to default colors, for simplicity.
+
+###2019.12.24
+ - Happy holidays (for real this time)!
+ - Commit #117 - MINOR ISSUE: Fixed LED for empty tray which was misaligned.
+
+###2019.12.23
+ - Commit #114 - IMPROVEMENT: Changed the color to use the default Unraid class instead of regular "green" and "red"
+ - Commit #113 - IMPROVEMENT: Added minor tweak to the LEDs, mouse over and design should work better in vertical mode.
+ - Commit #112 - MINOR ISSUE: Added forgotten stripslashes and htmlspecialchars for the group name, quotes etc. should now work.
+
+###2019.11.19
+ - Commit #110 - IMPROVEMENT: Centered the tray config on the Dashboard page because someone got an OCD attack :p
+
+###2019.09.27
+ - Commit #108 - BUG: Missing bracket in CSS file, caused color error for LEDs
+
+###2019.09.26
+ - Commit #105 - FEATURE: Add force removal of drives stuck in database for any reason under a new tab called "Drives" under Configuration. This has slimmed down the "Information" page and leaves that with just the info without the controll/			         operation buttons. Some bugfixes applied to these buttons as well.
+ - Commit #104 - IMPROVEMENT: Unclear tray assigning because of TrayID assignment in some cases, made it more clear with added information.
+
+###2019.08.23
+ - Commit #102 - IMPROVEMENT: Hints provided by Squid to improve the dashboard integration. Further changes made to customize it and position it to your own liking.
+
+###2019.07.12
+ - Commit #100 - MINOR ISSUE: Fixed a non-numeric value warning message.
+ - Fixed padding for empty trays.
+
+###2019.07.10
+ - Commit #98 - IMPROVEMENT: Added color list for color selection under the "Configuration" tab.
+
+###2019.07.07
+ - Commit #94 - MINOR ISSUE: Some disks fail because of missing LUN. Skipping LUN during device validation, add LUN from SMART instead.
+
+###2019.07.06b
+ - Commit #92 - MINOR ISSUE: defined a variable as array(), caused a count() warning message.
+
+###2019.07.06
+ - Commit #90 - IMPROVEMENT: Adding a console window for "Force Scan" button, making it easier to see what's going on in the background.
+ - Commit #89 - BUG: Cache drive get unassigned color if it is an nvme drive. Use SCSI generic device node name instead if device node name is null.
+
+###2019.07.05
+ IMPROVEMENT: Checks for excisting cron file before deleting it during install, nothing important but it looks nicer.
+
+###2019.06.28
+ - Commit #45 - REQUEST: Different tray count (from FrackinFrog)
+ - Commit #22 - REQUEST: Multiple cases (from tarchive). Add a bunch of cases made available including a bunch of other configuration possibilities.
+ - Removed a bunch of bugs, rewrote a lot of code, and has in general made "Design v2.0". Too much to document, most forgotten anyway! But a lot of work has gone into this release.
+ - NB! Due to weird Unraid releases and versioning, this plugin will only work from 6.7.2 and onwards! 6.7.1 is broken (missing SQLite support). And I can't bothered keeping an eye with older versions as well.
+	
+###2019.06.23
+ - PFFT¤#"!%" - Currently need to stop support at Unraid 6.7.0 because lack of SQLite support in PHP from and including Unraid 6.7.1. Follow the forums for more information of the future.
+
+###2019.06.21
+ - Commit #84 - IMPROVEMENT: Help page has been removed and replaced by the standard Unraid inline help function.
+ - Commit #54 - FEATURE: Added a Dashboard widget.
+
+###2019.06.20
+ - Commit #82 - IMPROVEMENT: Installer and cron script now checks for running instances before executing them.
+ - Commit #81 - BUG: Forgot to add standby flag to smartctl. Disks should now be able to go back to standby/sleep/off mode again. Also made sure to not accidentally move drives to "lost" when they where just standby.
+ 
+ - git requirement removed!
+
+###2019.06.19https://forums.unraid.net/topic/81169-unraid-os-version-671-available/?tab=comments#comment-753703
+ - Commit #78 - IMPROVEMENT: Major change on how this plugin behaves has been implemented. The drives will now be inserted in the database at install time, and updated hourly via cronjob for the active drives.
+		             Force SMART scan button is also available at "Configuration".
+		             The temperature unit is now configured globally from Unraid itself (Display Settings).
+
+ - NB!!! Plugin does NOT install git automatically anymore, this is still required and must be installed manually or via "Nerd Pack" plugin.
+ 
+###2019.06.17
+ - Commit #76 - BUG: slackware64-current updated git to version 2.22.0 from 2.21.0.
+
+###2019.06.03
+ - Commit #74 - IMPROVEMENT: Add debugging tools. Edit system.php and enable debugging: set "$debugging_active = 1;" The output will be shown directly and stored appended in /boot/config/plugins/disklocation/debugging.html
+
+###2019.05.23
+ - Commit #72 - BUG: Blank screen after installing, git not included afterall in 6.7.0/6.7.1-rc1. Will install git with the intended version before installing the plugin.
+
+###2019.05.21
+ - Commit #69 - IMPROVEMENT: Cleared up some UI issues. Made sure that trays can't be written over each other, the newest assigned device will overwrite the existing tray and put the device (if it exists) back in the unassigned table. Also my favorite commit number.
+
+###2019.05.02
+ - Commit #67 - MINOR ISSUE/FEATURE: Disk slot assignments dont save properly - removed some confusion for empty tables. Disabled the empty slots when the locations table is empty.
+
+###2019.04.29
+ - Commit #65 - MINOR ISSUE: Checks an array before counting it.
+ - Removed disklocation.plg file: use disklocation-master.plg instead.
+
+###2019.03.10
+ - Commit #63 - BUG: Removed harddrives did not show up in the Information list but got invisible instead.
+ - Commit #62 - MINOR ISSUE: Fix broken harddrive information. Parsing of lsscsi is redone.
+
 ###2019.03.09
  - Commit #60 - MINOR ISSUE: Warranty info is repeated for empty or non configured devices. Fixed by defining a variable as null.
 
@@ -177,25 +314,29 @@ fi
 
 <!--# Download plugin files -->
 if [ "$DOWNLOAD_PKG" == "true" ]; then
+
   <!--# Save existing packages until new package is downloaded OK -->
   logit "Saving any previous packages from &pluginLOC;"
   mkdir -p "/tmp/&name;-packages"
-  TEMP="&pluginLOC;/&name;.*.tar.bz2"
-  mv -f $TEMP "/tmp/&name;-packages"
+  TEMPOLD="&pluginLOC;/&name;.*.tar.bz2"
+  TEMP="&pluginLOC;/&name;.*.zip"
+  mv -f $TEMPOLD $TEMP "/tmp/&name;-packages/"
 
-  logit "Attempting to download plugin package &packageGIT;..."
-  wget --quiet --spider --no-check-certificate --timeout=10 &packageGIT;
+  logit "Attempting to download plugin package &packageURL;..."
+  wget -O &pluginLOC;/&packagefile; --quiet --no-check-certificate --timeout=30 &packageURL;
   if [ ! $? == "0" ] ; then
-    logit "Package server down &packageGIT; - Plugin cannot install"
+    logit "Package server down &packageURL; - Plugin cannot install"
     INSTALL_PKG="false"
   else
+  <!--# Do not use git anymore, we download the generated zip file instead. (Double hyphens are splitted)
     mkdir -p "/tmp/&name;-git"
-    git clone --single-branch --branch &branch; &packageGIT; "/tmp/&name;-git"
+    git clone - -single-branch - -branch &branch; &packageGIT; "/tmp/&name;-git"
     tar jcf "/tmp/&name;-git/&packagefile;" -C "/tmp/&name;-git" &name;
     mv "/tmp/&name;-git/&packagefile;" &pluginLOC;
     rm -rf "/tmp/&name;-git"
+  -->
     if [ ! -f "&pluginLOC;/&packagefile;" ] ; then
-      logit "Package download failed &packageGIT; - Plugin cannot install"
+      logit "Package download failed &packageURL; - Plugin cannot install"
       INSTALL_PKG="false"
     else
       logit "Package &packagefile; downloaded to &pluginLOC;"
@@ -208,12 +349,22 @@ if [ "$INSTALL_PKG" == "true" ] ; then
   logit "Extracting plugin package..."
   <!--# Remove current existing files -->
   [ -d "&emhttpLOC;" ] &amp;&amp; rm -fR "&emhttpLOC;"
-  <!--# Extract files -->
-  tar -jxf "&pluginLOC;/&packagefile;" -C "&emplugLOC;"
+  <!--# Extract files and move correct directory -->
+  unzip "&pluginLOC;/&packagefile;" -d /tmp/&name;-packages/
+  mv "/tmp/&name;-packages/&name;-&branch;/&name;" "&emplugLOC;/"
+  <!--tar -jxf "&pluginLOC;/&packagefile;" -C "&emplugLOC;"-->
   <!--# Edit PAGE file  - Dynamically add version number -->
   if [ -f "&emhttpLOC;/&name;.page" ] ; then
     echo "Version=\"&version;\"" &gt;&gt; "&emhttpLOC;/&name;.page"
+    logit "Extraction done."
+    EXTRACT_PKG="true"
+  else
+    logit "Extraction failed."
+    EXTRACT_PKG="false"
   fi
+fi
+
+if [ "$EXTRACT_PKG" == "true" ] ; then
   <!--# Add locate bash script -->
   cat &gt;/usr/local/bin/smartlocate &lt;&lt;EOL
 #!/bin/bash
@@ -237,14 +388,38 @@ while sleep 0.5; do
 done
 EOL
   chmod +x /usr/local/bin/smartlocate
-  
   rm -Rf "/tmp/&name;-packages"
   rm -f "/tmp/&name;-install"
-  if [[ -f "&pluginLOC;/disklocation.sqlite" &amp;&amp; ! -f "&pluginLOC;/disklocation_db_v2.sqlite.tar.bz2" ]]; then
-    tar jcf &pluginLOC;/disklocation_db_v2.sqlite.tar.bz2 &pluginLOC;/disklocation.sqlite
-    logit "Made backup of database (&pluginLOC;/disklocation_db_v2.sqlite.tar.bz2) before it will be upgraded to version 3"
+  
+  <!--# Disabled: Add crontab script -->
+  <!--# cp &emhttpLOC;/&name;.cron /etc/cron.hourly/disklocation.sh -->
+  
+  if [[ "`pidof -x disklocation.sh`" ]]; then
+    logit "Cronjob is already running... retrying every 5 seconds until it finish..."
+    while [ "`pidof -x disklocation.sh`" ];
+    do
+      sleep 5
+      logit "retrying..."
+    done
+    logit "done and continue..."
   fi
-  logit "Plugin and Package file &packagefile; extracted and installed successfully"
+  
+  if [[ -f "&pluginLOC;/disklocation.sqlite" &amp;&amp; ! -f "&pluginLOC;/disklocation_db_v5.sqlite.tar.bz2" ]]; then
+    tar jcf &pluginLOC;/disklocation_db_v5.sqlite.tar.bz2 &pluginLOC;/disklocation.sqlite
+    logit "Made backup of database (&pluginLOC;/disklocation_db_v5.sqlite.tar.bz2) before it will be upgraded to version 6"
+  fi
+  logit "Package file &packagefile; extracted."
+  
+  if [[ ! -f "&pluginLOC;/disklocation.noscan" ]]; then
+    logit "Adding disks into database, please wait... this might take a while..."
+    php -f /usr/local/emhttp/plugins/disklocation/pages/system.php cronjob
+  else
+    logit "Device scanning during updates are disabled: No new devices will be detected and no data will be updated."
+  fi
+  
+  <!--# chmod +x /etc/cron.hourly/disklocation.sh -->
+  <!--# logit "Added cronjob script in cron.hourly." -->
+  logit "Plugin installed successfully!"
   exit 0
 else
   <!-- Revert back to previous packages -->
@@ -256,7 +431,9 @@ else
   TEMP1="/tmp/&name;-packages"
   TEMP2=$(ls $TEMP1)
   if [ "$TEMP2" != "" ] ; then
-    TEMP="/tmp/&name;-packages/&name;.*.tar.bz2"
+    OLDTEMP="/tmp/&name;-packages/&name;.*.tar.bz2"
+    TEMP="/tmp/&name;-packages/&name;.*.zip"
+    mv -f $OLDTEMP "&pluginLOC;"
     mv -f $TEMP "&pluginLOC;"
     logit "Previous packages restored"
   else
@@ -288,7 +465,12 @@ logit "Removing plugin..."
 [ -f "/tmp/&name;-install" ] &amp;&amp; rm -f "/tmp/&name;-install"
 [ -d "&emhttpLOC;" ] &amp;&amp; rm -fR "&emhttpLOC;"
 [ -f "/usr/local/bin/smartlocate" ] &amp;&amp; rm -f "/usr/local/bin/smartlocate"
+[ -f "/etc/cron.hourly/disklocation.sh" ] &amp;&amp; rm -f "/etc/etc.hourly/disklocation.sh"
+[ -f "/etc/cron.daily/disklocation.sh" ] &amp;&amp; rm -f "/etc/etc.daily/disklocation.sh"
+[ -f "/etc/cron.weekly/disklocation.sh" ] &amp;&amp; rm -f "/etc/etc.weekly/disklocation.sh"
+[ -f "/etc/cron.monthly/disklocation.sh" ] &amp;&amp; rm -f "/etc/etc.monthly/disklocation.sh"
 rm -f &pluginLOC;/disklocation.*.tar.bz2
+rm -f &pluginLOC;/disklocation.*.zip
 logit "Plugin stopped and removed, package files removed from &pluginLOC;, database is not removed."
 </INLINE>
 </FILE>
